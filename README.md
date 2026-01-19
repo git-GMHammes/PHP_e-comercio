@@ -34,7 +34,6 @@ O projeto segue rigorosamente o padrão Model-View-Controller:
 - **PHP**: Versão compatível com CI4
 - **Servidor Web**: Nginx (via Docker)
 - **Containerização**: Docker + Docker Compose
-- **Sistema de Autenticação**: Ion Auth (integrado)
 
 ## 📁 Estrutura Detalhada
 
