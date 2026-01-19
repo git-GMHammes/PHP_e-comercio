@@ -1,6 +1,6 @@
 # Sistema de Comércio Eletrônico - CodeIgniter 4.6
 
-Este documento apresenta uma análise completa da estrutura e arquitetura do projeto **ci46comercio**, um sistema de e-commerce desenvolvido em CodeIgniter 4.6.
+Este documento apresenta uma análise completa da estrutura e arquitetura do projeto **PHP_e-comercio**, um sistema de e-commerce desenvolvido em CodeIgniter 4.6.
 
 ## 📋 Visão Geral
 
@@ -10,7 +10,7 @@ O projeto é um sistema de comércio eletrônico moderno que utiliza o framework
 
 ### Estrutura Principal
 ```
-ci46comercio/
+PHP_e-comercio/
 ├── docker/                    # Configurações de containerização
 │   ├── nginx/                # Servidor web
 │   └── php/                  # Runtime PHP
@@ -227,7 +227,7 @@ docker/
 
 ## 💡 Conclusão
 
-O projeto **ci46comercio** demonstra uma implementação sólida e bem estruturada de um sistema de e-commerce usando CodeIgniter 4.6. A arquitetura modular, sistema de segurança robusto e uso de containerização mostram boas práticas de desenvolvimento moderno. O projeto está bem preparado para evoluções futuras e mantém alta qualidade de código e organização.
+O projeto **PHP_e-comercio** demonstra uma implementação sólida e bem estruturada de um sistema de e-commerce usando CodeIgniter 4.6. A arquitetura modular, sistema de segurança robusto e uso de containerização mostram boas práticas de desenvolvimento moderno. O projeto está bem preparado para evoluções futuras e mantém alta qualidade de código e organização.
 
 ---
 
@@ -242,7 +242,7 @@ O projeto **ci46comercio** demonstra uma implementação sólida e bem estrutura
 ## Estrutura do Projeto
 
 ```
-C:\laragon\www\ci46comercio\
+C:\laragon\www\PHP_e-comercio\
 ├── doc/
 ├── docker/
 ├── src/                    ← CodeIgniter 4.6 será instalado aqui
@@ -257,9 +257,9 @@ C:\laragon\www\ci46comercio\
 Abra o **PowerShell** e execute:
 
 ```bash
-cd C:\laragon\www\ci46comercio
+cd C:\laragon\www\PHP_e-comercio
 
-docker exec -it ci46comercio_php sh
+docker exec -it PHP_e-comercio_php sh
 ```
 
 ---
@@ -318,9 +318,9 @@ chmod -R 777 /var/www/html/writable
 
 - **Host**: mysql
 - **Porta**: 3306
-- **Database**: ci46comercio_db
-- **Usuário**: ci46comercio_user
-- **Senha**: ci46comercio_P@ssw0rd_2024
+- **Database**: PHP_e-comercio_db
+- **Usuário**: PHP_e-comercio_user
+- **Senha**: PHP_e-comercio_P@ssw0rd_2024
 
 # 🚀 MIGRAÇÃO CODEIGNITER 4.1 → 4.6 COM PHP 8.3
 
@@ -329,7 +329,7 @@ chmod -R 777 /var/www/html/writable
 Coloque os arquivos nas seguintes localizações:
 
 ```
-C:\laragon\www\ci46comercio\
+C:\laragon\www\PHP_e-comercio\
 ├── docker-compose.yml          ← SUBSTITUA este arquivo
 ├── docker\
 │   ├── php\
@@ -578,9 +578,9 @@ public array $redis = [
 public array $default = [
     // ...
     'hostname' => 'mysql',
-    'username' => 'ci46comercio_user',
-    'password' => 'ci46comercio_P@ssw0rd_2024',
-    'database' => 'ci46comercio_db',
+    'username' => 'PHP_e-comercio_user',
+    'password' => 'PHP_e-comercio_P@ssw0rd_2024',
+    'database' => 'PHP_e-comercio_db',
     // ...
 ];
 ```
@@ -686,7 +686,7 @@ INSERT INTO auth_groups_users (user_id, group, created_at) VALUES
 ### Criar usuário teste (via CLI)
 
 ```bash
-docker exec -it ci46comercio_php sh
+docker exec -it PHP_e-comercio_php sh
 php spark shield:user create admin@exemplo.com senha123
 ```
 
@@ -704,7 +704,7 @@ docker-compose up -d
 ### Limpar cache do CodeIgniter
 
 ```bash
-docker exec -it ci46comercio_php sh
+docker exec -it PHP_e-comercio_php sh
 rm -rf /var/www/html/writable/cache/*
 ```
 
@@ -723,7 +723,7 @@ docker-compose logs -f nginx
 
 - [ ] Acessar http://localhost:56100 (deve mostrar página inicial)
 - [ ] Acessar http://localhost:56102 (Adminer - testar conexão banco)
-- [ ] Verificar se Redis está rodando: `docker exec -it ci46comercio_redis redis-cli ping`
+- [ ] Verificar se Redis está rodando: `docker exec -it PHP_e-comercio_redis redis-cli ping`
 
 ### 2. Testar autenticação
 
@@ -774,7 +774,7 @@ docker-compose logs -f nginx
 ### Erro de permissão em writable/
 
 ```bash
-docker exec -it ci46comercio_php chmod -R 777 /var/www/html/writable
+docker exec -it PHP_e-comercio_php chmod -R 777 /var/www/html/writable
 ```
 
 ---
@@ -796,7 +796,7 @@ Quando todos os itens estiverem marcados, a migração está concluída! 🎉
 ### PASSO 2: Criar projeto CodeIgniter 4.6 (se ainda não criou)
 
 ```bash
-cd C:\laragon\www\ci46comercio
+cd C:\laragon\www\PHP_e-comercio
 
 # Criar pasta src se não existir
 mkdir src
@@ -812,7 +812,7 @@ composer create-project codeigniter4/appstarter . "^4.6"
 
 ```bash
 # Voltar para raiz do projeto
-cd C:\laragon\www\ci46comercio
+cd C:\laragon\www\PHP_e-comercio
 
 # Parar containers antigos (se existirem)
 docker-compose down
@@ -834,7 +834,7 @@ docker-compose up -d
 docker-compose logs -f php
 
 # Acessar container PHP
-docker exec -it ci46comercio_php sh
+docker exec -it PHP_e-comercio_php sh
 
 # Dentro do container, verificar versão PHP
 php -v
@@ -859,8 +859,8 @@ Após subir os containers, verifique:
 
 - [ ] `docker ps` mostra 4 containers rodando (mysql, redis, adminer, php, nginx)
 - [ ] http://localhost:56100 carrega a página padrão do CodeIgniter 4
-- [ ] `docker exec -it ci46comercio_php php -v` mostra PHP 8.3.x
-- [ ] Adminer conecta no banco (servidor: mysql, usuário: ci46comercio_user, senha: ci46comercio_P@ssw0rd_2024)
+- [ ] `docker exec -it PHP_e-comercio_php php -v` mostra PHP 8.3.x
+- [ ] Adminer conecta no banco (servidor: mysql, usuário: PHP_e-comercio_user, senha: PHP_e-comercio_P@ssw0rd_2024)
 
 ---
 
@@ -899,7 +899,7 @@ docker-compose logs mysql
 **Solução**: Ajustar permissões da pasta src
 
 ```bash
-docker exec -it ci46comercio_php chmod -R 777 /var/www/html/writable
+docker exec -it PHP_e-comercio_php chmod -R 777 /var/www/html/writable
 ```
 
 ---
