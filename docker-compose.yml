@@ -1,0 +1,104 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: ci46comercio_mysql
+    restart: unless-stopped
+    ports:
+      - "56001:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root_S3cur3P@ss_2024
+      MYSQL_DATABASE: ci46comercio_db
+      MYSQL_USER: ci46comercio_user
+      MYSQL_PASSWORD: ci46comercio_P@ssw0rd_2024
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - ci46comercio_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_S3cur3P@ss_2024"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  redis:
+    image: redis:alpine
+    container_name: ci46comercio_redis
+    restart: unless-stopped
+    ports:
+      - "56003:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - ci46comercio_network
+    command: redis-server --appendonly yes
+
+  adminer:
+    image: adminer:latest
+    container_name: ci46comercio_adminer
+    restart: unless-stopped
+    ports:
+      - "56002:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: mysql
+    networks:
+      - ci46comercio_network
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  php:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    container_name: ci46comercio_php
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html
+    environment:
+      # Configurações de Banco de Dados
+      DB_CONNECTION: MySQLi
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: ci46comercio_db
+      DB_USERNAME: ci46comercio_user
+      DB_PASSWORD: ci46comercio_P@ssw0rd_2024
+      # Configurações do CodeIgniter 4
+      CI_ENVIRONMENT: development
+      APP_NAME: "CI46 Comercio"
+      APP_BASE_URL: http://localhost:56000
+      # Redis (opcional para cache/sessões)
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    networks:
+      - ci46comercio_network
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  nginx:
+    image: nginx:alpine
+    container_name: ci46comercio_nginx
+    restart: unless-stopped
+    ports:
+      - "56000:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - ci46comercio_network
+    depends_on:
+      - php
+
+networks:
+  ci46comercio_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
